@@ -1,0 +1,56 @@
+name: Bot Actu Twitter
+
+on:
+  # Exécution automatique toutes les 20 minutes
+  schedule:
+    - cron: '*/20 * * * *'
+
+  # Permet de lancer manuellement depuis l'onglet Actions de GitHub
+  workflow_dispatch:
+
+jobs:
+  post-news:
+    runs-on: ubuntu-latest
+
+    # Permissions pour committer le fichier anti-doublon
+    permissions:
+      contents: write
+
+    steps:
+      # 1. Récupérer le code du repo
+      - name: Checkout du repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # 2. Installer Python
+      - name: Installer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # 3. Cache des dépendances pip (accélère les runs suivants)
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+
+      # 4. Installer les dépendances
+      - name: Installer les dépendances
+        run: pip install -r requirements.txt
+
+      # 5. Lancer le bot
+      - name: Exécuter le bot
+        env:
+          OPENTWEET_API_KEY: ${{ secrets.OPENTWEET_API_KEY }}
+        run: python bot.py
+
+      # 6. Committer le fichier anti-doublon (pour que le prochain run sache ce qui a déjà été publié)
+      - name: Sauvegarder l'état anti-doublon
+        run: |
+          git config --local user.email "bot@github-actions"
+          git config --local user.name "Actu Bot"
+          git add data/seen_articles.json
+          git diff --staged --quiet || git commit -m "🔄 Mise à jour articles publiés [skip ci]"
+          git push

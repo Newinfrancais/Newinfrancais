@@ -1,8 +1,19 @@
+"""
+Configuration du Bot Twitter Actu — Version OpenTweet + tendances
+===================================================================
+"""
+
 import os
 
+# ============================================================
+# OPENTWEET API
+# ============================================================
 OPENTWEET_API_KEY = os.environ.get("OPENTWEET_API_KEY", "")
 OPENTWEET_BASE_URL = "https://opentweet.io/api/v1"
 
+# ============================================================
+# FLUX RSS — Sources d'actualite
+# ============================================================
 RSS_FEEDS = {
     "Le Monde": "https://www.lemonde.fr/rss/en_continu.xml",
     "Le Monde - International": "https://www.lemonde.fr/international/rss_full.xml",
@@ -22,6 +33,9 @@ RSS_FEEDS = {
     "BBC": "http://feeds.bbci.co.uk/news/rss.xml",
 }
 
+# ============================================================
+# PARAMETRES DU BOT
+# ============================================================
 MAX_TWEETS_PER_RUN = 4
 MAX_ARTICLE_AGE_HOURS = 2
 MAX_TWEET_LENGTH = 275

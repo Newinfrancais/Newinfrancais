@@ -142,4 +142,9 @@ def main():
             sys.exit(1)
 
     stats = run_cycle(dry_run=args.dry_run)
-  if stats["failed"] > 0 and stats["posted"] == 0:
+    if stats["failed"] > 0 and stats["posted"] == 0:
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()

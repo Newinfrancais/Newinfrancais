@@ -142,4 +142,4 @@ def main():
             sys.exit(1)
 
     stats = run_cycle(dry_run=args.dry_run)
-    if stats["failed"] > 0 and stats["posted"] == 
+  if stats["failed"] > 0 and stats["posted"] == 0:
